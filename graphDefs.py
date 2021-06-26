@@ -1,0 +1,1 @@
+#This file contains definitions for graphs, networks and sub-elements, such as nodes and edges.
