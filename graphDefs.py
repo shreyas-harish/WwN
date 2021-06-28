@@ -73,11 +73,11 @@ class node:
         print(self.nodeID)
 
 class graph:
-    #Initialization function creates an empty dictionary of nodes, with specific source and target IDs created
+    #Initialization function creates an empty dictionary of nodes, with empty source and target variables
     def __init__(self):
         self.nodes = {}
-        self.nodes["start"] = None
-        self.nodes["target"] = None
+        self.sourceID = None
+        self.targetID = None
 
     #Function to add/overwrite a node
     def addNode(self, addNode):
@@ -146,28 +146,22 @@ class graph:
     def printGraph(self):
         for no in self.nodes:
             nod = self.nodes[no]
-            if nod == None:
-                print(no)
-            else:
-                print("Node")
-                nod.printNode()
-                print("Edges In")
-                for ed in nod.edgesIn.values():
-                    ed.printEdge()
-                print("Edges Out")
-                for ed in nod.edgesOut.values():
-                    ed.printEdge()
+            print("Node")
+            nod.printNode()
+            print("Edges In")
+            for ed in nod.edgesIn.values():
+                ed.printEdge()
+            print("Edges Out")
+            for ed in nod.edgesOut.values():
+                ed.printEdge()
 
     #Function to print the graph in a simpler (almost edge list) manner
     def printGraphSimple(self):
         for no in self.nodes:
             nod = self.nodes[no]
-            if nod == None:
-                print(no)
-            else:
-                nod.printNode()
-                for ed in nod.edgesOut.values():
-                    ed.printEdgeSimple()
+            nod.printNode()
+            for ed in nod.edgesOut.values():
+                ed.printEdgeSimple()
     
     #Function to clear parents across all nodes
     def clearParents(self):

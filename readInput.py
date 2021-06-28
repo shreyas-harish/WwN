@@ -40,6 +40,4 @@ def inputFile(delimit=" ", inputType="directedArc"):
     for lin in Lines:
         g = inputLine(g,lin.strip(),delimit,inputType)
         count += 1
-    g.printGraph()
-
-inputFile()
+    return g
