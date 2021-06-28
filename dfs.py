@@ -22,7 +22,7 @@ def depthFirstTreeBuilder(g,n,par=None):
 def depthFirstForestBuilder(g):
     global visited
     for n in g.nodes.keys():
-        if (not g.nodes[n] == None) and (not n in visited):
+        if not n in visited:
             depthFirstTreeBuilder(g,n,None)
 
 #Depth First Search Algorithm to check if target node can be found from starting node
@@ -41,6 +41,7 @@ def depthFirstSearch(g,s,t,par=None):
             if depthFirstSearch(g,nod,t,s):
                 return True
         print("returning ",s)
+    return False
 
 #Depth First Search Algorithm to check which all nodes in the graph can and can't be reached from the start node
 def depthFirstReach(g,s,par=None):
