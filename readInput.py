@@ -8,14 +8,14 @@ def inputLine(g, l, delimit=" ", inputType="directedArc"):
         if len(params)==4:
             g.safeAddNode(params[0])
             g.safeAddNode(params[1])
-            g.addEdge(params[0],params[1],cost=params[2],capacity=params[3])
+            g.addEdge(params[0],params[1],cost=int(params[2]),capacity=int(params[3]))
     elif inputType=="bidirectionalArc":
         params = l.split(delimit)
         if len(params)==4:
             g.safeAddNode(params[0])
             g.safeAddNode(params[1])
-            g.addEdge(params[0],params[1],cost=params[2],capacity=params[3])
-            g.addEdge(params[1],params[0],cost=params[2],capacity=params[3])
+            g.addEdge(params[0],params[1],cost=int(params[2]),capacity=int(params[3]))
+            g.addEdge(params[1],params[0],cost=int(params[2]),capacity=int(params[3]))
     elif inputType=="directedEdge":
         params = l.split(delimit)
         if len(params)==2:

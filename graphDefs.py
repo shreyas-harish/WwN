@@ -40,6 +40,7 @@ class node:
     def __init__(self, nodeID):
         self.nodeID = nodeID
         self.category = 0
+        self.distance = None
         self.parent = None
         self.edgesIn = {}
         self.edgesOut = {}
@@ -47,6 +48,10 @@ class node:
     #Function to set or change category
     def setCategory(self, category):
         self.category = category
+
+    #Function to set or change distance
+    def setDistance(self, distance):
+        self.distance = distance
 
     #Function to set or change parent
     def setParent(self, parent):
