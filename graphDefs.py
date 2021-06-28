@@ -31,6 +31,10 @@ class edge:
     def printEdge(self):
         print(self.startNode,"->",self.endNode,", cap ",self.capacity,", cost ",self.cost,", util ",self.utilization)
 
+    #Function to print edge in a simpler (succinct) manner
+    def printEdgeSimple(self):
+        print(self.startNode,"->",self.endNode)
+
 class node:
     #Initialization function requires a nodeID. All other parameters take default values to begin with
     def __init__(self, nodeID):
@@ -78,6 +82,11 @@ class graph:
     #Function to add/overwrite a node
     def addNode(self, addNode):
         self.nodes[addNode] = node(addNode)
+
+    #Function to add a node only if node already doesn't exist
+    def safeAddNode(self, addNode):
+        if not addNode in self.nodes.keys():
+            self.nodes[addNode] = node(addNode)
 
     #Function to add/overwrite an edge
     def addEdge(self, startNode, endNode, capacity=0, cost=0, utilization=0, category=0, bidirectional=False):
@@ -148,3 +157,31 @@ class graph:
                 print("Edges Out")
                 for ed in nod.edgesOut.values():
                     ed.printEdge()
+
+    #Function to print the graph in a simpler (almost edge list) manner
+    def printGraphSimple(self):
+        for no in self.nodes:
+            nod = self.nodes[no]
+            if nod == None:
+                print(no)
+            else:
+                nod.printNode()
+                for ed in nod.edgesOut.values():
+                    ed.printEdgeSimple()
+    
+    #Function to clear parents across all nodes
+    def clearParents(self):
+        for no in self.nodes:
+            self.nodes[no].parent = None
+
+    #Function to clear category across all nodes
+    def clearCategory(self):
+        for no in self.nodes:
+            self.nodes[no].category = 0
+
+    #Function to print from a given node, upwards through parents
+    def printThroughParent(self,no):
+        nod = self.nodes[no]
+        nod.printNode()
+        if not nod.parent == None:
+            self.printThroughParent(nod.parent)
