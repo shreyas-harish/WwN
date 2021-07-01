@@ -17,6 +17,7 @@ def depthFirstTreeBuilder(g,n,par=None):
         print("returning ",n)
     elif g.nodes[n].parent == None:
         g.nodes[n].parent = par
+    return g
 
 #Depth First Algorithm to build up DFS forest and fully traverse graph from a starting node
 def depthFirstForestBuilder(g):
@@ -24,6 +25,7 @@ def depthFirstForestBuilder(g):
     for n in g.nodes.keys():
         if not n in visited:
             depthFirstTreeBuilder(g,n,None)
+    return g
 
 #Depth First Search Algorithm to check if target node can be found from starting node
 def depthFirstSearch(g,s,t,par=None):
@@ -60,3 +62,7 @@ def depthFirstReach(g,s,par=None):
                 notReachable.append(n)
         print("Reachable set ",visited)
         print("Not reachable set",notReachable)
+    reachSet = {}
+    reachSet["reachable"] = visited
+    reachSet["unreachable"] = notReachable
+    return reachSet

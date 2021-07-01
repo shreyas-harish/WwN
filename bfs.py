@@ -26,6 +26,7 @@ def breadthFirstTreeBuilder(g,n,par=None):
                 print(n,"->",nod)
                 g.nodes[nod].parent = par
         active.pop(0)
+    return g
 
 #Breadth First Algorithm to build up BFS forest and fully traverse graph from a starting node
 def breadthFirstForestBuilder(g):
@@ -33,6 +34,7 @@ def breadthFirstForestBuilder(g):
     for n in g.nodes.keys():
         if not n in visited:
             breadthFirstTreeBuilder(g,n,None)
+    return g
 
 #Breadth First Search Algorithm to check if target node can be found from starting node
 def breadthFirstSearch(g,s,t,par=None):
@@ -81,3 +83,7 @@ def breadthFirstReach(g,n,par=None):
             notReachable.append(n)
     print("Reachable set ",visited)
     print("Not reachable set",notReachable)
+    reachSet = {}
+    reachSet["reachable"] = visited
+    reachSet["unreachable"] = notReachable
+    return reachSet
