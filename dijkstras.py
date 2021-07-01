@@ -1,4 +1,4 @@
-#This file contains shortest path algorithm related helper functions
+#This file contains shortest path algorithm related helper functions through dijkstra's implementation
 from graphDefs import *
 from readInput import *
 
@@ -20,9 +20,12 @@ def closest(g):
 
 #Function to print the distances of all nodes in the graph
 def distances(g):
+    dist = {}
     for n in g.nodes.keys():
         nod = g.nodes[n]
-        print(n," - ",nod.distance)
+        dist[n] = nod.distance
+    print(dist)
+    return dist
 
 #Function to implement djikstra's algorithm
 def dijkstra(g,s):
@@ -37,9 +40,10 @@ def dijkstra(g,s):
                 if (nod.distance == None) or (nod.distance > newDistance):
                     nod.setDistance(newDistance)
                     nod.setCategory(1)
+                    nod.setParent(current.nodeID)
         if not closest(g) == None:
             current = g.nodes[closest(g)]
             current.setCategory(2)
         else:
             current = None
-    distances(g)
+    return distances(g)
