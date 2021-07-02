@@ -6,5 +6,6 @@ from bf import *
 from dijkstras import *
 
 g = inputFile()
-bellmanFord(g,"0")
-g.printThroughParent("5")
+dijkstra(g,"0")
+g = inputFile()
+dijkstraMinHeap(g,"0")
