@@ -66,3 +66,7 @@ def depthFirstReach(g,s,par=None):
     reachSet["reachable"] = visited
     reachSet["unreachable"] = notReachable
     return reachSet
+
+def depthFirstReset():
+    global visited
+    visited = []
