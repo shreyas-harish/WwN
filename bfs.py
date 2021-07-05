@@ -87,3 +87,9 @@ def breadthFirstReach(g,n,par=None):
     reachSet["reachable"] = visited
     reachSet["unreachable"] = notReachable
     return reachSet
+
+def breadthFirstReset():
+    global visited
+    global active
+    visited = []
+    active = []
