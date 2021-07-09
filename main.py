@@ -5,11 +5,11 @@ from dfs import *
 from bf import *
 from dijkstras import *
 from floydWarshall import *
+from yen import *
 
 g = inputFile()
-dist1 = dynamicAllPairsShortestPaths(g)
-dist2 = dynamicAllPairsShortestPathsFaster(g)
-dist3 = floydWarshall(g)
-print(arrayCompare(dist1,dist2))
-print(arrayCompare(dist1,dist3))
-gridPrint(g,dist3)
+distances = floydWarshall(g)
+paths = yenKSP(g,"4","7",10)
+print(len(paths))
+for p in paths:
+    printPath(p)
