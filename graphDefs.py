@@ -63,7 +63,8 @@ class node:
 
     #Function to delete inward edge
     def delEdgeIn(self, edgeIn):
-        self.edgesIn.pop(edgeIn.startNode)
+        if edgeIn.startNode in self.edgesIn.keys():
+            self.edgesIn.pop(edgeIn.startNode)
 
     #Function to add/overwrite outward edge
     def addEdgeOut(self, edgeOut):
@@ -71,7 +72,8 @@ class node:
 
     #Function to delete outward edge
     def delEdgeOut(self, edgeOut):
-        self.edgesOut.pop(edgeOut.endNode)
+        if edgeOut.endNode in self.edgesOut.keys():
+            self.edgesOut.pop(edgeOut.endNode)
 
     #Function to print node
     def printNode(self):

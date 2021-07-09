@@ -105,7 +105,8 @@ def dynamicAllPairsShortestPaths(g):
                 #Iterate through all incoming nodes
                 for k in range(nodeCount):
                     distCopy[i][j] = compareDist(distCopy[i][j],dist[i][k],directCost[k][j])
-        
+        print("iteration ",(iter+1))
+        gridPrint(g,distCopy)
         dist = distCopy
     
     return dist
@@ -138,6 +139,8 @@ def dynamicAllPairsShortestPathsFaster(g):
                 for k in range(nodeCount):
                     distCopy[i][j] = compareDist(distCopy[i][j],dist[i][k],dist[k][j])
         
+        print("iteration ",(iter+1))
+        gridPrint(g,distCopy)
         if arrayCompare(dist,distCopy):
             return dist
         else:
@@ -161,6 +164,7 @@ def floydWarshall(g):
             dist[nodeNumber][nodeToNumberMap.index(ed)] = g.nodes[n].edgesOut[ed].cost
         nodeNumber += 1
 
+    iter = 0
     #Iterate through all incoming nodes
     for k in range(nodeCount):
         #Iterate through all start nodes
@@ -170,5 +174,8 @@ def floydWarshall(g):
                 for j in range(nodeCount):
                     if (not j == k):
                         dist[i][j] = compareDist(dist[i][j],dist[i][k],dist[k][j])
+        iter += 1
+        print("iteration ",(iter)," intermediary node ",nodeToNumberMap[k])
+        gridPrint(g,dist)
     
     return dist
