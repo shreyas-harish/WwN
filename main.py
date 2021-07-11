@@ -9,7 +9,7 @@ from yen import *
 
 g = inputFile()
 distances = floydWarshall(g)
-paths = yenKSP(g,"4","7",10)
+paths = yenKSP(g, "4", "7", 10)
 print(len(paths))
 for p in paths:
     printPath(p)
