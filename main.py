@@ -6,6 +6,7 @@ from bf import *
 from dijkstras import *
 from floydWarshall import *
 from yen import *
+from astar import *
 
 g = inputFile()
 distances = floydWarshall(g)
