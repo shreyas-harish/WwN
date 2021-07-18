@@ -6,15 +6,19 @@ from yen import *
 
 pathLengthsByNode = {}
 
-#Function to reset path lengths for all nodes to None
+# Function to reset path lengths for all nodes to None
+
+
 def resetPathLengths(givenGraph):
     global pathLengthsByNode
     pathLengthsByNode.clear()
     for nod in givenGraph.nodes.keys():
         pathLengthsByNode[nod] = None
 
-#Function to get the estimated distance from one node to any other node
-def getEstimatedDistance(nodeID,endNodeID,distanceMatrix,matrixMap):
+# Function to get the estimated distance from one node to any other node
+
+
+def getEstimatedDistance(nodeID, endNodeID, distanceMatrix, matrixMap):
     rowNo = None
     colNo = None
     count = 0
@@ -29,7 +33,6 @@ def getEstimatedDistance(nodeID,endNodeID,distanceMatrix,matrixMap):
     else:
         return None
 
-#TODO: Rewrite all heap functions to work on path length
 # Function to find the node with the lowest total path length from all active nodes
 
 
@@ -48,29 +51,34 @@ def closest(g):
                 closeNode = n
     return closeNode
 
-#Function to create node to node distance map for the A* algorithm
+# Function to create node to node distance map for the A* algorithm
+
+
 def setAStar(startGraph):
-    #Mapping of nodes to the order in which they will be present in the distance matrix
+    # Mapping of nodes to the order in which they will be present in the distance matrix
     nodeToNumberMap = []
     for n in startGraph.nodes.keys():
         nodeToNumberMap.append(startGraph.nodes[n].nodeID)
-    #Call floyd warshall to get the distance matrix
+    # Call floyd warshall to get the distance matrix
     distanceMatrix = floydWarshall(startGraph)
-    
+
     return {"distanceMatrix": distanceMatrix, "matrixMap": nodeToNumberMap}
 
-#Function to find the shortest path between any s & t, by providing a warm start to the dikstra's algorithm (A* algorithm)
-def aStar(distMatrix,currentGraph,startNode,endNode):
-    #Get the distance matrix and the mapping of node number to row & column
+# Function to find the shortest path between any s & t, by providing a warm start to the dijkstra's algorithm (using the A* algorithm)
+
+
+def aStar(distMatrix, currentGraph, startNode, endNode):
+    # Get the distance matrix and the mapping of node number to row & column
     distanceMatrix = distMatrix["distanceMatrix"]
     matrixMap = distMatrix["matrixMap"]
-    #Keep the global path lengths variable in place
+    # Keep the global path lengths variable in place
     resetPathLengths(currentGraph)
     global pathLengthsByNode
-    #Initialise the starting node as the current node
+    # Initialise the starting node as the current node
     current = currentGraph.nodes[startNode]
     current.setDistance(0)
-    pathLengthsByNode[startNode] = getEstimatedDistance(startNode,endNode,distanceMatrix,matrixMap)
+    pathLengthsByNode[startNode] = getEstimatedDistance(
+        startNode, endNode, distanceMatrix, matrixMap)
     current.setCategory(2)
     count = 1
     while not current == None:
@@ -82,11 +90,12 @@ def aStar(distMatrix,currentGraph,startNode,endNode):
             if not nod.category == 2:
                 if (nod.distance == None) or (nod.distance > newDistance):
                     #print("node changed ")
-                    #nod.printNode()
+                    # nod.printNode()
                     #print("distance change ", nod.distance, " to ", newDistance)
                     nod.setDistance(newDistance)
                     #print("path length change from ", pathLengthsByNode[nod.nodeID]),
-                    pathLengthsByNode[nod.nodeID] = nod.distance + getEstimatedDistance(nod.nodeID,endNode,distanceMatrix,matrixMap)
+                    pathLengthsByNode[nod.nodeID] = nod.distance + getEstimatedDistance(
+                        nod.nodeID, endNode, distanceMatrix, matrixMap)
                     #print(" to ", pathLengthsByNode[nod.nodeID])
                     if nod.category == 0:
                         nod.setCategory(1)
