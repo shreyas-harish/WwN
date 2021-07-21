@@ -48,16 +48,16 @@ def breadthFirstSearch(g, s, t, par=None):
     global active
     visited.append(s)
     active.append(s)
-    print(par, "->", s)
+    #print(par, "->", s)
     while not len(active) == 0:
         s = active[0]
         for nod in g.nodes[s].edgesOut.keys():
             if not nod in visited:
-                print(s, "->", nod)
+                #print(s, "->", nod)
                 visited.append(nod)
                 g.nodes[nod].parent = s
                 if nod == t:
-                    print("found ", t)
+                    #print("found ", t)
                     return True
                 active.append(nod)
         active.pop(0)
