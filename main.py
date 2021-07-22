@@ -10,6 +10,6 @@ from astar import *
 from maxflow import *
 
 g1 = inputFile("/Users/shreyasharish/Documents/WwN/input2.txt")
-flow = edmondsKarps(g1,"0","5")
+flow = pushRelabel(g1,"0","5")
 print(flow["flow"])
 flow["flowGraph"].printGraph()
