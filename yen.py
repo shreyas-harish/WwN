@@ -68,10 +68,10 @@ def copyNode(n):
     nodeCopy.setCategory(n.category)
     nodeCopy.setDistance(n.distance)
     nodeCopy.setParent(n.parent)
-    for ed in n.edgesIn.keys():
+    for ed in sorted(n.edgesIn.keys()):
         edgeToAdd = copyEdge(n.edgesIn[ed])
         nodeCopy.addEdgeIn(edgeToAdd)
-    for ed in n.edgesOut.keys():
+    for ed in sorted(n.edgesOut.keys()):
         edgeToAdd = copyEdge(n.edgesOut[ed])
         nodeCopy.addEdgeOut(edgeToAdd)
     return nodeCopy
@@ -81,7 +81,7 @@ def copyNode(n):
 
 def copyGraph(g):
     graphCopy = graph()
-    for n in g.nodes.keys():
+    for n in sorted(g.nodes.keys()):
         nodeToAdd = copyNode(g.nodes[n])
         graphCopy.nodes[nodeToAdd.nodeID] = nodeToAdd
     return graphCopy

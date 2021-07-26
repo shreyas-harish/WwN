@@ -207,13 +207,17 @@ def checkEdgeAdmissability(residualGraph, fromNode, toNode):
 
 # Maintain list of active nodes for the push relabel algorithm
 activeNodes = []
+activeNodeAdmissableDivider = -1
 
 # Function to activate a given node. Checks if already active. Never activate start or end node.
 
 
 def activateNode(nodeToActivate, startNode, endNode):
     global activeNodes
+    global activeNodeAdmissableDivider
     if nodeToActivate in activeNodes:
+        if activeNodes.index(nodeToActivate) <= activeNodeAdmissableDivider:
+            activeNodeAdmissableDivider -= 1
         activeNodes.remove(nodeToActivate)
     if (not nodeToActivate == startNode) and (not nodeToActivate == endNode):
         activeNodes.append(nodeToActivate)
@@ -223,7 +227,10 @@ def activateNode(nodeToActivate, startNode, endNode):
 
 def deactivateNode(nodeToActivate):
     global activeNodes
+    global activeNodeAdmissableDivider
     if nodeToActivate in activeNodes:
+        if activeNodes.index(nodeToActivate) <= activeNodeAdmissableDivider:
+            activeNodeAdmissableDivider -= 1
         activeNodes.remove(nodeToActivate)
 
 # Function to handle a flow push, including setting nodes as active/inactive and updating excess values. Returns true if some flow is admissable.
@@ -274,6 +281,8 @@ def pushRelabel(startingGraph, startNode, endNode):
     # Reset list of active nodes
     global activeNodes
     activeNodes = []
+    global activeNodeAdmissableDivider
+    activeNodeAdmissableDivider = -1
     # Call a reverse dijkstra's on the original graph to set distances as distance label. Also set start node with special label value.
     distanceLabelGraph = reverseDijkstra(startingGraph, endNode)
     distanceLabelGraph.nodes[startNode].distance = len(
@@ -289,13 +298,13 @@ def pushRelabel(startingGraph, startNode, endNode):
     # While active nodes are not empty, run through them in FIFO manner
     while not nodeToPushFrom == None:
         changeInActiveNodes = False
+        activeNodeAdmissableDivider += 1
         # Iterate through all edges from the node and check if the edge is admissable or not
         for toNode in residualGraph.nodes[nodeToPushFrom].edgesOut.keys():
             # Push maximum flow possible through admissable edge. Set the next node to active, update excess values of both nodes.
             thisChangedActiveNodes = advancedPushFlow(
                 residualGraph, nodeToPushFrom, toNode, startNode, endNode)
-            changeInActiveNodes = (
-                changeInActiveNodes or thisChangedActiveNodes)
+            changeInActiveNodes = (changeInActiveNodes or thisChangedActiveNodes)
         # Identify next active node to use in FIFO. Check if all active are impossible, then relabel one (in FIFO). Check if active nodes are empty, then end.
         if changeInActiveNodes:
             iterationPosition = -1
@@ -309,6 +318,81 @@ def pushRelabel(startingGraph, startNode, endNode):
             iterationPosition = 0
             nodeToPushFrom = activeNodes[iterationPosition]
             relabel(residualGraph, nodeToPushFrom)
+
+    flow = residualGraph.nodes[endNode].category
+    flowGraph = graphDifference(startingGraph, residualGraph)
+    return {"flow": flow, "flowGraph": flowGraph}
+
+#Function to find the next active node o select, given the most recently used node
+
+def nextActiveNode(residualGraph,lastNode):
+    global activeNodes
+    global activeNodeAdmissableDivider
+    lastNode = len(activeNodes)-1
+    nodePosition = activeNodeAdmissableDivider + 1
+    nextNode = None
+    while nodePosition <=lastNode:
+        checkNode = activeNodes[nodePosition]
+        if (nextNode == None) or (nextNode > int(checkNode)):
+            nextNode = int(checkNode)
+        nodePosition += 1
+        
+    if nextNode == None:
+        if len(activeNodes) > 0:
+            minDistance = None
+            nodeToRelabel = None
+            for checkNode in activeNodes:
+                distance = residualGraph.nodes[checkNode].distance
+                if (minDistance == None) or (minDistance > distance):
+                    minDistance = distance
+                    nodeToRelabel = checkNode
+            relabel(residualGraph, nodeToRelabel)
+            nextNode = nodeToRelabel
+
+    if not nextNode == None:
+        nextNode = str(nextNode)
+        deactivateNode(nextNode)
+        activeNodes.insert(activeNodeAdmissableDivider+1,nextNode)
+
+    return nextNode
+
+# Function to implement the push relabel algorithm with some heuristics
+
+
+def pushRelabelHeuristics(startingGraph, startNode, endNode):
+    # NOTE: Distance holds the reverse distance label for each node and category holds the excess at the node
+    # Reset list of active nodes
+    global activeNodes
+    activeNodes = []
+    global activeNodeAdmissableDivider
+    activeNodeAdmissableDivider = -1
+    # Call a reverse dijkstra's on the original graph to set distances as distance label. Also set start node with special label value.
+    distanceLabelGraph = reverseDijkstra(startingGraph, endNode)
+    distanceLabelGraph.nodes[startNode].distance = len(
+        distanceLabelGraph.nodes)
+    # Create a residual network copy of the original graph
+    residualGraph = convertToResidualGraph(distanceLabelGraph)
+    # Push maximum flow possible from start node. Activate all nodes which have been pushed to and set their excess values.
+    for toNode in residualGraph.nodes[startNode].edgesOut.keys():
+        advancedPushFlow(residualGraph, startNode, toNode, startNode, endNode)
+    nodeToPushFrom = None
+    iterationPosition = 0
+    nodeToPushFrom = nextActiveNode(residualGraph,"-1")
+    # While active nodes are not empty, run through them in FIFO manner
+    iteractionCount = 0
+    while not nodeToPushFrom == None:
+        iteractionCount += 1
+        print(iteractionCount,end=", ")
+        print(nodeToPushFrom)
+        changeInActiveNodes = False
+        activeNodeAdmissableDivider += 1
+        # Iterate through all edges from the node and check if the edge is admissable or not
+        for toNode in residualGraph.nodes[nodeToPushFrom].edgesOut.keys():
+            # Push maximum flow possible through admissable edge. Set the next node to active, update excess values of both nodes.
+            thisChangedActiveNodes = advancedPushFlow(residualGraph, nodeToPushFrom, toNode, startNode, endNode)
+            changeInActiveNodes = (changeInActiveNodes or thisChangedActiveNodes)
+        # Identify next active node to use by finding the next highest node value or relabeling. Check if active nodes are empty, then end.
+        nodeToPushFrom = nextActiveNode(residualGraph,nodeToPushFrom)
 
     flow = residualGraph.nodes[endNode].category
     flowGraph = graphDifference(startingGraph, residualGraph)
