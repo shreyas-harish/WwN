@@ -194,6 +194,8 @@ def reverseDijkstra(g, t):
 def checkEdgeAdmissability(residualGraph, fromNode, toNode):
     node1 = residualGraph.nodes[fromNode]
     node2 = residualGraph.nodes[toNode]
+    if (node1.distance == None) or (node2.distance == None):
+        return False
     if node1.distance <= node2.distance:
         return False
     if toNode in node1.edgesOut:
@@ -242,19 +244,22 @@ def advancedPushFlow(residualGraph, fromNode, toNode, startNode, endNode):
     flowAvailable = residualGraph.nodes[fromNode].category
     capacityAvailable = residualGraph.nodes[fromNode].edgesOut[toNode].capacity
     if fromNode == startNode:
-        flow2Nodes(residualGraph, fromNode, toNode, capacityAvailable)
-        activateNode(toNode, startNode, endNode)
-        residualGraph.nodes[toNode].category += capacityAvailable
+        if capacityAvailable > 0:
+            flow2Nodes(residualGraph, fromNode, toNode, capacityAvailable)
+            activateNode(toNode, startNode, endNode)
+            residualGraph.nodes[toNode].category += capacityAvailable
     elif flowAvailable >= capacityAvailable:
-        flow2Nodes(residualGraph, fromNode, toNode, capacityAvailable)
-        activateNode(toNode, startNode, endNode)
-        residualGraph.nodes[fromNode].category -= capacityAvailable
-        residualGraph.nodes[toNode].category += capacityAvailable
+        if capacityAvailable > 0:
+            flow2Nodes(residualGraph, fromNode, toNode, capacityAvailable)
+            activateNode(toNode, startNode, endNode)
+            residualGraph.nodes[fromNode].category -= capacityAvailable
+            residualGraph.nodes[toNode].category += capacityAvailable
     elif flowAvailable < capacityAvailable:
-        flow2Nodes(residualGraph, fromNode, toNode, flowAvailable)
-        activateNode(toNode, startNode, endNode)
-        residualGraph.nodes[fromNode].category -= flowAvailable
-        residualGraph.nodes[toNode].category += flowAvailable
+        if flowAvailable > 0:
+            flow2Nodes(residualGraph, fromNode, toNode, flowAvailable)
+            activateNode(toNode, startNode, endNode)
+            residualGraph.nodes[fromNode].category -= flowAvailable
+            residualGraph.nodes[toNode].category += flowAvailable
     if residualGraph.nodes[fromNode].category == 0:
         deactivateNode(fromNode)
     if (toNode == endNode) or (toNode == startNode):
@@ -267,7 +272,7 @@ def advancedPushFlow(residualGraph, fromNode, toNode, startNode, endNode):
 def relabel(residualGraph, nodeToRelabel):
     minNewLabel = len(residualGraph.nodes)+1
     for toNode in residualGraph.nodes[nodeToRelabel].edgesOut.keys():
-        if residualGraph.nodes[nodeToRelabel].edgesOut[toNode].capacity > 0:
+        if (residualGraph.nodes[nodeToRelabel].edgesOut[toNode].capacity > 0) and (not residualGraph.nodes[toNode].distance == None):
             newLabel = residualGraph.nodes[toNode].distance + 1
             if minNewLabel > newLabel:
                 minNewLabel = newLabel
@@ -285,8 +290,7 @@ def pushRelabel(startingGraph, startNode, endNode):
     activeNodeAdmissableDivider = -1
     # Call a reverse dijkstra's on the original graph to set distances as distance label. Also set start node with special label value.
     distanceLabelGraph = reverseDijkstra(startingGraph, endNode)
-    distanceLabelGraph.nodes[startNode].distance = len(
-        distanceLabelGraph.nodes)
+    distanceLabelGraph.nodes[startNode].distance = len(distanceLabelGraph.nodes)
     # Create a residual network copy of the original graph
     residualGraph = convertToResidualGraph(distanceLabelGraph)
     # Push maximum flow possible from start node. Activate all nodes which have been pushed to and set their excess values.
@@ -302,8 +306,7 @@ def pushRelabel(startingGraph, startNode, endNode):
         # Iterate through all edges from the node and check if the edge is admissable or not
         for toNode in residualGraph.nodes[nodeToPushFrom].edgesOut.keys():
             # Push maximum flow possible through admissable edge. Set the next node to active, update excess values of both nodes.
-            thisChangedActiveNodes = advancedPushFlow(
-                residualGraph, nodeToPushFrom, toNode, startNode, endNode)
+            thisChangedActiveNodes = advancedPushFlow(residualGraph, nodeToPushFrom, toNode, startNode, endNode)
             changeInActiveNodes = (changeInActiveNodes or thisChangedActiveNodes)
         # Identify next active node to use in FIFO. Check if all active are impossible, then relabel one (in FIFO). Check if active nodes are empty, then end.
         if changeInActiveNodes:
@@ -368,8 +371,7 @@ def pushRelabelHeuristics(startingGraph, startNode, endNode):
     activeNodeAdmissableDivider = -1
     # Call a reverse dijkstra's on the original graph to set distances as distance label. Also set start node with special label value.
     distanceLabelGraph = reverseDijkstra(startingGraph, endNode)
-    distanceLabelGraph.nodes[startNode].distance = len(
-        distanceLabelGraph.nodes)
+    distanceLabelGraph.nodes[startNode].distance = len(distanceLabelGraph.nodes)
     # Create a residual network copy of the original graph
     residualGraph = convertToResidualGraph(distanceLabelGraph)
     # Push maximum flow possible from start node. Activate all nodes which have been pushed to and set their excess values.
