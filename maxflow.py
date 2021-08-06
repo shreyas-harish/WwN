@@ -381,17 +381,21 @@ def pushRelabelHeuristics(startingGraph, startNode, endNode):
     iterationPosition = 0
     nodeToPushFrom = nextActiveNode(residualGraph,"-1")
     # While active nodes are not empty, run through them in FIFO manner
-    iteractionCount = 0
+    iterationCount = 0
     while not nodeToPushFrom == None:
-        iteractionCount += 1
-        print(iteractionCount,end=", ")
-        print(nodeToPushFrom)
         changeInActiveNodes = False
         activeNodeAdmissableDivider += 1
         # Iterate through all edges from the node and check if the edge is admissable or not
         for toNode in residualGraph.nodes[nodeToPushFrom].edgesOut.keys():
             # Push maximum flow possible through admissable edge. Set the next node to active, update excess values of both nodes.
+            startingExcess = residualGraph.nodes[nodeToPushFrom].category
             thisChangedActiveNodes = advancedPushFlow(residualGraph, nodeToPushFrom, toNode, startNode, endNode)
+            finalExcess = residualGraph.nodes[nodeToPushFrom].category
+            if finalExcess < startingExcess:
+                iterationCount += 1
+                print("iteration ",iterationCount,end=", ")
+                print("push from ",nodeToPushFrom,end=", ")
+                print("push to ",toNode)
             changeInActiveNodes = (changeInActiveNodes or thisChangedActiveNodes)
         # Identify next active node to use by finding the next highest node value or relabeling. Check if active nodes are empty, then end.
         nodeToPushFrom = nextActiveNode(residualGraph,nodeToPushFrom)
