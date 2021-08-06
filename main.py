@@ -10,7 +10,7 @@ from astar import *
 from maxflow import *
 
 g1 = inputFile("/Users/shreyasharish/Documents/WwN/input2.txt")
-flow = pushRelabelHeuristics(g1,"0","5")
+flow = pushRelabelHeuristics(g1,"0","7")
 print(flow["flow"])
 #flow["flowGraph"].printGraph()
 """
