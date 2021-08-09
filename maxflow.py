@@ -1,4 +1,4 @@
-# This file contains shortest path algorithm related helper functions through dijkstra's implementation
+# This file contains shortest maximum flow related helper functions through Edmond Karps and Push Relabel implementations
 from graphDefs import *
 from readInput import *
 from bfs import *
@@ -20,14 +20,18 @@ def checkForEdge(graphToSearch, startNode, endNode):
 # Function to take a graph and create a full bidirectional residual version of it
 
 
-def convertToResidualGraph(startingGraph):
+def convertToResidualGraph(startingGraph,negativeReverseEdges=False):
     residualGraph = copyGraph(startingGraph)
     # Iterate through all nodes and edges to create reverse edges with 0 capacity if needed
     for nodeID in residualGraph.nodes.keys():
         nodeToUse = residualGraph.nodes[nodeID]
         for edgeToID in nodeToUse.edgesOut.keys():
             if not checkForEdge(residualGraph, edgeToID, nodeID):
-                residualGraph.addEdge(edgeToID, nodeID)
+                if negativeReverseEdges == True:
+                    edgeCost = -nodeToUse.edgesOut[edgeToID].cost
+                    residualGraph.addEdge(edgeToID, nodeID,cost=edgeCost)
+                else:
+                    residualGraph.addEdge(edgeToID, nodeID)
     edgeSeparatedResidualGraph = copyGraph(residualGraph)
     return edgeSeparatedResidualGraph
 
