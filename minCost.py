@@ -63,7 +63,7 @@ def costAndFlowOfPath(path):
             pos += 1
         return {"cost": cost, "capacity": capacity}
 
-#Function that identifies the minimum cost flow through which a given amount of flow can be passed in a graph
+#Function that identifies the minimum cost flow through which a given amount of flow can be passed in a graph through capcity scaling algorithm
 def capacityScaling(startingGraph,sourceNode,sinkNode,amountOfFlow):
     #Create residual network where the reverse edges have negative costs
     residualGraph = convertToResidualGraph(startingGraph,negativeReverseEdges=True)
@@ -88,4 +88,99 @@ def capacityScaling(startingGraph,sourceNode,sinkNode,amountOfFlow):
         minCostAugmentingPath = positiveCapacityBellmanFord(residualGraph,sourceNode,sinkNode)
 
     flowGraph = graphDifference(startingGraph, residualGraph)
-    return {"cost": currentCost, "flow": amountOfFlow, "flowGraph": flowGraph}
+    return {"cost": currentCost, "flow": (amountOfFlow-remainingFlow), "flowGraph": flowGraph}
+
+#Function to identify the cycle, after running Bellman Ford, and return it as a path
+def cycleFromNode(residualGraph,changedNode):
+    tentativeCycle = []
+    currentNode = residualGraph.nodes[changedNode]
+    while True:
+        tentativeCycle.append(currentNode)
+        nextNodeID = currentNode.parent
+        if nextNodeID == None:
+            return None
+        currentNode = residualGraph.nodes[nextNodeID]
+        if currentNode in tentativeCycle:
+            startPosition = tentativeCycle.index(currentNode)
+            cyclePath = []
+            cyclePath.append(currentNode)
+            position = len(tentativeCycle)-1
+            while(position >= startPosition):
+                cyclePath.append(tentativeCycle[position])
+                position -= 1
+            return cyclePath
+
+#Function to identify negative cycles in residual graph and return them as a path
+def negativeCycleBelmanFord(residualGraph):
+    edgeList = graphToEdgeList(residualGraph)
+    for sourceNode in residualGraph.nodes.keys():
+        #Reset all nodes' distances and categories
+        residualGraph = resetNodeVariables(residualGraph)
+
+        #Set threshold values
+        maxIterations = len(residualGraph.nodes)
+        currentIterations = 0
+
+        # Set the first node's distance and category
+        residualGraph.nodes[sourceNode].setDistance(0)
+        residualGraph.nodes[sourceNode].setCategory(1)
+        flag = True
+        # While the distances are still changing, check if any edge results in a change in distances
+        while flag == True:
+            flag = False
+            for ed in edgeList:
+                current = residualGraph.nodes[ed.startNode]
+                if (current.category == 1) and (ed.capacity > 0):
+                    nod = residualGraph.nodes[ed.endNode]
+                    newDistance = current.distance+ed.cost
+                    if (nod.distance == None) or (nod.distance > newDistance):
+                        nod.setDistance(newDistance)
+                        nod.setCategory(1)
+                        nod.setParent(current.nodeID)
+                        flag = True
+                        if currentIterations > maxIterations:
+                            cyclePath = cycleFromNode(residualGraph,nod.nodeID)
+                            if not cyclePath == None:
+                                return cyclePath
+            currentIterations += 1
+    
+    return None
+
+#Function that identifies the minimum cost flow through which a given amount of flow can be passed in a graph through cycle cancelling algorithm
+def cycleCancelling(startingGraph,sourceNode,sinkNode,amountOfFlow):
+    #Initialise variables for cost and flow
+    currentCost = 0
+    remainingFlow = amountOfFlow
+    #Create residual network where the reverse edges have negative costs
+    residualGraph = convertToResidualGraph(startingGraph,negativeReverseEdges=True)
+
+    #Find augmenting paths to fill up required flow
+    augmentingPath = findAugmentingPath(residualGraph,sourceNode,sinkNode)
+    while((not augmentingPath == None) and (remainingFlow > 0)):
+        #Find cost and flow of path and increment counters
+        costAndFlow = costAndFlowOfPath(augmentingPath["path"])
+        if remainingFlow < costAndFlow["capacity"]:
+            augmentingFlow = remainingFlow
+        else:
+            augmentingFlow = costAndFlow["capacity"]
+        remainingFlow -= augmentingFlow
+        currentCost += costAndFlow["cost"]*augmentingFlow
+        #Push flow and create a residual network output
+        pushFlowInGraph(residualGraph,augmentingPath["path"],augmentingFlow)
+        #Find augmenting paths to fill up required flow
+        augmentingPath = findAugmentingPath(residualGraph,sourceNode,sinkNode)
+    
+    negativeCycle = negativeCycleBelmanFord(residualGraph)
+    while(not negativeCycle == None):
+        #Find cost and flow of path (negative cycle)
+        costAndFlow = costAndFlowOfPath(negativeCycle)
+        #Change cost of flow
+        augmentingFlow = costAndFlow["capacity"]
+        currentCost += costAndFlow["cost"]*augmentingFlow
+        #push flow along negative cycle
+        pushFlowInGraph(residualGraph,negativeCycle,augmentingFlow)
+        #Check for another negative cycle using bellman ford modification
+        negativeCycle = negativeCycleBelmanFord(residualGraph)
+
+    flowGraph = graphDifference(startingGraph, residualGraph)
+    return {"cost": currentCost, "flow": (amountOfFlow-remainingFlow), "flowGraph": flowGraph}

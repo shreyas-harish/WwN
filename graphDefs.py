@@ -156,7 +156,7 @@ class graph:
     def printGraph(self):
         for no in self.nodes:
             nod = self.nodes[no]
-            print("Node")
+            print("Node",end=" ")
             nod.printNode()
             print("Edges In")
             for ed in nod.edgesIn.values():
