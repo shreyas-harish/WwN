@@ -1,5 +1,6 @@
 #NOTE: The packages imported below contain functions written for the WwN course at IIM-A
 #NOTE: Some of these functions have been reused for the purpose of this project
+from readExcelInput import readDistanceMatrix
 from graphDefs import *
 from readInput import *
 from bfs import *
@@ -17,9 +18,17 @@ from olympicEventObjects import *
 
 #Reading all inputs (events schedule, distances, reporters available, other constraints)
 inputSet = inputOlympicEvents(file='/Users/shreyasharish/Documents/WwN/OlympicEvents.txt')
-#TODO: Read venue distance matrix
+#Read venue distance matrix and update venue order
+inputSet1 = readDistanceMatrix(inputSet,'/Users/shreyasharish/Documents/WwN/Venue distances.xls',"Distances")
 
 #Read constraints
+#TODO: Create different inputSet versions for:
+# 1. no constraints
+# 2. fixed number of reporters
+# 3. 2+ number of reporters required
+# 4. 2+3+ event priority
+# 5. 2+3+4+ reporter specialisation flag
+# 6. 2+3+4+5+ updated distance matrix
     #TODO: capture number of reporters available
     #TODO: Iterate through and capture number of reporters required and priority by event type
     #TODO: Set reporter specialisation flag
