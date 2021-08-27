@@ -13,13 +13,13 @@ from maxflow import *
 from minCost import *
 
 #Packages which have been written/imported exclusively for this project
+from olympicEventObjects import *
 
 #Reading all inputs (events schedule, distances, reporters available, other constraints)
-#TODO: Read the olympic events schedule
+inputSet = inputOlympicEvents(file='/Users/shreyasharish/Documents/WwN/OlympicEvents.txt')
 #TODO: Read venue distance matrix
 
-#TODO: Set flag to capture or use defaults for constrant variables
-#Read constraints if browniePoints flag is on
+#Read constraints
     #TODO: capture number of reporters available
     #TODO: Iterate through and capture number of reporters required and priority by event type
     #TODO: Set reporter specialisation flag
@@ -27,6 +27,7 @@ from minCost import *
 
 #Modelling the problem in the form of a graph
 #TODO: Setup required graphs (different graphs for each set of constraints)
+#TODO: Create multiple versions of 3 olympic lists + constraints and from each group create 1 graph
 
 #Finding the minimum number of reports required to cover all events and the maximum events coverable with the given reporters
 #Find minimum reporters required if there are no constraints
