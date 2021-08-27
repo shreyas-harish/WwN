@@ -1,5 +1,6 @@
 # This file contains helper functions to read txt files and store the input in the form of a network/graph.
 from graphDefs import *
+from olympicEventObjects import *
 
 # Function to process one line of input and add to a given graph
 
@@ -97,3 +98,47 @@ def inputFileEdges(file='/Users/shreyasharish/Documents/WwN/input.txt', delimit=
         edgeList = inputLineEdge(edgeList, lin.strip(), delimit, inputType)
         count += 1
     return edgeList
+
+# Function to process one line of input and return the sport name, venue name, start time and end time
+
+
+def inputOlympicEventLine(inputLineEvent, delimit=", "):
+    params = inputLineEvent.split(delimit)
+    sportName = params[0]
+    venueName = params[1]
+
+    # Isolate the hour and minute of start and end, and store as a float of the hour
+    timeParams = params[2].split(" ")
+    startTimeParams = timeParams[1].split(":")
+    endTimeParams = timeParams[2].split(":")
+    startTime = float(startTimeParams[0]) + (float(startTimeParams[1])/60)
+    endTime = float(endTimeParams[0]) + (float(endTimeParams[1])/60)
+
+    # Return dictionary of required values
+    return {"sport": sportName, "venue": venueName, "startTime": startTime, "endTime": endTime}
+
+# Function to read file and create a graph output
+
+
+def inputOlympicEvents(file='/Users/shreyasharish/Documents/WwN/OlympicEvents.txt', delimit=", "):
+    file1 = open(file, 'r')
+    Lines = file1.readlines()
+
+    dictOfSports = {}
+    listOfVenues = []
+    listOfEvents = []
+
+    # Read each line of the input
+    for lin in Lines:
+        # For each line of input, get the sport, venue and timing
+        eventDetails = inputOlympicEventLine(lin.strip(), delimit)
+        # Add the sport, venue and even to the respective output lists/dicts
+        dictOfSports[eventDetails["sport"]] = sport(eventDetails["sport"])
+        if not eventDetails["venue"] in listOfVenues:
+            listOfVenues.append(eventDetails["venue"])
+        listOfEvents.append(event(
+            dictOfSports[eventDetails["sport"]], eventDetails["venue"], eventDetails["startTime"], eventDetails["endTime"]))
+
+    inputSet = {"sports": dictOfSports, "venues": listOfVenues, "events": listOfEvents,
+                "distanceMatrix": None, "reporterLimit": None, "reportersSpecialiseBySport": False}
+    return inputSet
