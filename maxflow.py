@@ -160,7 +160,7 @@ def edmondsKarps(startingGraph, startNode, endNode):
         augmentingPath = findAugmentingPath(residualGraph, startNode, endNode)
 
     flowGraph = graphDifference(startingGraph, residualGraph)
-    return {"flow": flow, "flowGraph": flowGraph}
+    return {"flow": flow, "flowGraph": flowGraph, "residualGraph": residualGraph}
 
 # Function to implement reverse dijkstra's to set distance values as distance labels and return the full graph
 
@@ -328,7 +328,7 @@ def pushRelabel(startingGraph, startNode, endNode):
 
     flow = residualGraph.nodes[endNode].category
     flowGraph = graphDifference(startingGraph, residualGraph)
-    return {"flow": flow, "flowGraph": flowGraph}
+    return {"flow": flow, "flowGraph": flowGraph, "residualGraph": residualGraph}
 
 #Function to find the next active node o select, given the most recently used node
 
@@ -406,4 +406,4 @@ def pushRelabelHeuristics(startingGraph, startNode, endNode):
 
     flow = residualGraph.nodes[endNode].category
     flowGraph = graphDifference(startingGraph, residualGraph)
-    return {"flow": flow, "flowGraph": flowGraph}
+    return {"flow": flow, "flowGraph": flowGraph, "residualGraph": residualGraph}

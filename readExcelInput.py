@@ -80,8 +80,14 @@ def readReportersRequired(inputSet, file='/Users/shreyasharish/Documents/WwN/Ven
             inputSet["sports"][sportName].priorityLevel)
         rowNumber += 1
 
+    #Update sports objects inside event objects
+    listOfEvents = []
+    for eventObject in inputSet["events"]:
+        newEventObject = event(dictOfSports[eventObject.sport.sportName],eventObject.venue,eventObject.startTime,eventObject.endTime)
+        listOfEvents.append(newEventObject)
+
     # Edit input set and return
-    return {"sports": dictOfSports, "venues": inputSet["venues"], "events": inputSet["events"],
+    return {"sports": dictOfSports, "venues": inputSet["venues"], "events": listOfEvents,
             "distanceMatrix": inputSet["distanceMatrix"], "reporterLimit": inputSet["reporterLimit"], "reportersSpecialiseBySport": inputSet["reportersSpecialiseBySport"]}
 
 # Function to update the dict of sports with new priority level by sport
@@ -108,8 +114,14 @@ def readPriorityLevels(inputSet, file='/Users/shreyasharish/Documents/WwN/Venue 
         dictOfSports[sportName].setPriorityLevel(priorityLevel)
         rowNumber += 1
 
+    #Update sports objects inside event objects
+    listOfEvents = []
+    for eventObject in inputSet["events"]:
+        newEventObject = event(dictOfSports[eventObject.sport.sportName],eventObject.venue,eventObject.startTime,eventObject.endTime)
+        listOfEvents.append(newEventObject)
+
     # Edit input set and return
-    return {"sports": dictOfSports, "venues": inputSet["venues"], "events": inputSet["events"],
+    return {"sports": dictOfSports, "venues": inputSet["venues"], "events": listOfEvents,
             "distanceMatrix": inputSet["distanceMatrix"], "reporterLimit": inputSet["reporterLimit"], "reportersSpecialiseBySport": inputSet["reportersSpecialiseBySport"]}
 
 

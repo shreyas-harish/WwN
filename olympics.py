@@ -15,6 +15,7 @@ from minCost import *
 
 #Packages which have been written/imported exclusively for this project
 from olympicEventObjects import *
+from olympicScheduling import *
 
 #Reading all inputs (events schedule, distances, reporters available, other constraints)
 inputSet = inputOlympicEvents(file='/Users/shreyasharish/Documents/WwN/OlympicEvents.txt')
@@ -41,13 +42,20 @@ inputSet5 = readReporterSpecialisation(inputSet4,'/Users/shreyasharish/Documents
 inputSet6 = readDistanceMatrix(inputSet5,'/Users/shreyasharish/Documents/WwN/Venue distances.xls',"Updated Distances")
 
 #Modelling the problem in the form of a graph
-#TODO: Setup required graphs (different graphs for each set of constraints)
-#TODO: Create multiple versions of 3 olympic lists + constraints and from each group create 1 graph
+#Setup required graphs (different graphs for each set of constraints)
+model1 = inputToGraph(inputSet1)
+model2 = inputToGraph(inputSet2)
+model3 = inputToGraph(inputSet3)
+model4 = inputToGraph(inputSet4)
+model5 = inputToGraph(inputSet5)
+model6 = inputToGraph(inputSet6)
 
 #Finding the minimum number of reports required to cover all events and the maximum events coverable with the given reporters
 #Find minimum reporters required if there are no constraints
 #TODO: Print set of constraints being used
 #TODO: Call function to find min reporters required for a given graph (print the list of events against each reporter)
+minReportersOutput = minReportersToCoverAllEvents(model1["graph"])
+print(minReportersOutput)
 #Find maximum events coverable with given number of reporters
 #TODO: Print set of constraints being used
 #TODO: If browniePoints flag is on, call function to find list of coverable events with above constraints
