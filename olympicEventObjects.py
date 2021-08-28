@@ -15,6 +15,21 @@ class sport:
     def setPriorityLevel(self, priorityLevel):
         self.priorityLevel = priorityLevel
 
+    # Function to print a sports object and its values
+    def printSport(self):
+        print("sport name -> ", self.sportName, end=" | ")
+        print("reporters required -> ", self.reportersRequired, end=" | ")
+        print("priority level -> ", self.priorityLevel)
+
+# Useful functions to run on groups of sport objects
+
+# Function to print a dict of sports objects
+
+
+def printDictOfSports(dictOfSports):
+    for key in dictOfSports.keys():
+        dictOfSports[key].printSport()
+
 # Definition of a event
 
 
@@ -32,3 +47,7 @@ class event:
     # Function to set or change ending node ID
     def setEndingNodeID(self, endingNodeID):
         self.endingNodeID = endingNodeID
+
+# Useful functions to run on groups of event objects
+
+# TODO: Function to print a dict of event objects
