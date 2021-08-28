@@ -1,6 +1,6 @@
 #NOTE: The packages imported below contain functions written for the WwN course at IIM-A
 #NOTE: Some of these functions have been reused for the purpose of this project
-from readExcelInput import readDistanceMatrix
+from readExcelInput import readDistanceMatrix, readPriorityLevels, readReporterSpecialisation, readReportersAvailable, readReportersRequired
 from graphDefs import *
 from readInput import *
 from bfs import *
@@ -18,21 +18,27 @@ from olympicEventObjects import *
 
 #Reading all inputs (events schedule, distances, reporters available, other constraints)
 inputSet = inputOlympicEvents(file='/Users/shreyasharish/Documents/WwN/OlympicEvents.txt')
-#Read venue distance matrix and update venue order
-inputSet1 = readDistanceMatrix(inputSet,'/Users/shreyasharish/Documents/WwN/Venue distances.xls',"Distances")
 
 #Read constraints
-#TODO: Create different inputSet versions for:
+#Create different inputSet versions for:
 # 1. no constraints
+#Read venue distance matrix and update venue order
+inputSet1 = readDistanceMatrix(inputSet,'/Users/shreyasharish/Documents/WwN/Venue distances.xls',"Distances")
 # 2. fixed number of reporters
+#capture number of reporters available
+inputSet2 = readReportersAvailable(inputSet1,'/Users/shreyasharish/Documents/WwN/Venue distances.xls',"Constraints")
 # 3. 2+ number of reporters required
+#Iterate through and capture number of reporters required sport
+inputSet3 = readReportersRequired(inputSet2,'/Users/shreyasharish/Documents/WwN/Venue distances.xls',"Constraints")
 # 4. 2+3+ event priority
+#Iterate through and capture priority by sport
+inputSet4 = readPriorityLevels(inputSet3,'/Users/shreyasharish/Documents/WwN/Venue distances.xls',"Constraints")
 # 5. 2+3+4+ reporter specialisation flag
+#Set reporter specialisation flag
+inputSet5 = readReporterSpecialisation(inputSet4,'/Users/shreyasharish/Documents/WwN/Venue distances.xls',"Constraints")
 # 6. 2+3+4+5+ updated distance matrix
-    #TODO: capture number of reporters available
-    #TODO: Iterate through and capture number of reporters required and priority by event type
-    #TODO: Set reporter specialisation flag
-    #TODO: Read the updated distance matrix
+#Read updated distance matrix
+inputSet6 = readDistanceMatrix(inputSet5,'/Users/shreyasharish/Documents/WwN/Venue distances.xls',"Updated Distances")
 
 #Modelling the problem in the form of a graph
 #TODO: Setup required graphs (different graphs for each set of constraints)
