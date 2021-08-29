@@ -56,6 +56,10 @@ model6 = inputToGraph(inputSet6)
 #TODO: Call function to find min reporters required for a given graph (print the list of events against each reporter)
 minReportersOutput = minReportersToCoverAllEvents(model1["graph"])
 maxEventsOutput = maxEventsCoverable(model2)
+flowAnalysis = flowToReporterSchedule(maxEventsOutput,model2)
+print(flowAnalysis["numberOfReporters"])
+print(flowAnalysis["numberOfEventsCovered"])
+print(flowAnalysis["reporterSchedule"])
 #Find maximum events coverable with given number of reporters
 #TODO: Print set of constraints being used
 #TODO: If browniePoints flag is on, call function to find list of coverable events with above constraints
