@@ -52,29 +52,21 @@ model6 = inputToGraph(inputSet6)
 
 #Finding the minimum number of reports required to cover all events and the maximum events coverable with the given reporters
 #Find minimum reporters required if there are no constraints
-#TODO: Print set of constraints being used
-#TODO: Call function to find min reporters required for a given graph (print the list of events against each reporter)
-minReportersOutput = minReportersToCoverAllEvents(model1["graph"])
-maxEventsOutput = maxEventsCoverable(model2)
-flowAnalysis = flowToReporterSchedule(maxEventsOutput,model2)
-print(flowAnalysis["numberOfReporters"])
-print(flowAnalysis["numberOfEventsCovered"])
-print(flowAnalysis["reporterSchedule"])
+# 1. no constraints
+print("Case 1 - No constraints")
+minReportersProblem(model1)
 #Find maximum events coverable with given number of reporters
-#TODO: Print set of constraints being used
-#TODO: If browniePoints flag is on, call function to find list of coverable events with above constraints
+print("Case 2 - Limited reporters available")
+maxEventsProblem(model2)
 #Find minimum reporters required and maximum events coverable with given number of reporters and number of reporters required per event
-#TODO: Print set of constraints being used
-#TODO: Call function to find min reporters required for a given graph (print the list of events against each reporter)
-#TODO: If browniePoints flag is on, call function to find list of coverable events with above constraints
+print("Case 3 - Multiple reporters required per event + limited reporters")
+maxEventsProblem(model3)
 #Find maximum events coverable with given number of reporters and number of reporters required per event and event priority
-#TODO: Print set of constraints being used
-#TODO: If browniePoints flag is on, call function to find list of coverable events with above constraints
+print("Case 4 - sport priority + multiple reporters per event + limited reporters")
+maxEventsProblem(model4)
 #Find minimum reporters required and maximum events coverable with given number of reporters and number of reporters required per event and event priority and reporter specialisation by event
-#TODO: Print set of constraints being used
-#TODO: Call function to find min reporters required for a given graph (print the list of events against each reporter)
-#TODO: If browniePoints flag is on, call function to find list of coverable events with above constraints
+print("Case 5 - reporter specialisation + sport priority + multiple reporters per event + limited reporters")
+maxEventsProblem(model5)
 #Find minimum reporters required and maximum events coverable with updated distances and above event+reporter requirements
-#TODO: Print set of constraints being used
-#TODO: Call function to find min reporters required for a given graph (print the list of events against each reporter)
-#TODO: If browniePoints flag is on, call function to find list of coverable events with above constraints
+print("Case 6 - all constraints with updated distances")
+maxEventsProblem(model6)

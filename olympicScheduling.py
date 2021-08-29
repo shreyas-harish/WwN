@@ -28,7 +28,7 @@ def minReportersToCoverAllEvents(startingGraph):
     # Edit the residual graph
     residualGraph = removeReverseEdgesOfEvents(residualGraph)
     # Pass the graph through reverse max flow
-    maxFlowOutput2 = edmondsKarps(residualGraph, "end", "start")
+    maxFlowOutput2 = edmondsKarps(residualGraph, "end", "start",False)
     # Return the flow, flow graph and residual graph
     flowGraph = graphDifference(startingGraph, maxFlowOutput2["residualGraph"])
     return {"flow": maxFlowOutput1["flow"]-maxFlowOutput2["flow"], "flowGraph": flowGraph, "residualGraph": maxFlowOutput2["residualGraph"]}
@@ -128,3 +128,42 @@ def flowToReporterSchedule(flowInput, inputModel):
     reporterSchedule = reporterWiseScheduleOfEvents(flowGraph, "start", "end")
 
     return {"numberOfReporters": numberOfReporters, "numberOfEventsCovered": eventCoverageCount, "reporterSchedule": reporterSchedule}
+
+# Function to print the output of a flow analysis neatly in terminal
+
+
+def printFlowAnalysis(flowAnalysis, inputModel):
+    print("Number of Reporters -", end=" ")
+    print(flowAnalysis["numberOfReporters"])
+    print("Number of Events Covered -", end=" ")
+    print(flowAnalysis["numberOfEventsCovered"], end=" / ")
+    print(len(inputModel["inputSet"]["events"]))
+    count = 1
+    for reporter in flowAnalysis["reporterSchedule"]:
+        print("Reporter ", count, end=" - ")
+        for eventNumber in reporter:
+            print("event ", eventNumber, end=", ")
+        print("")
+        count += 1
+
+# Function to find the minimum reporters required in a given model and output appropriately
+
+
+def minReportersProblem(inputModel):
+    print("______________________________________________________________")
+    print("Q) Min reporters required to cover all events")
+    minReportersOutput = minReportersToCoverAllEvents(inputModel["graph"])
+    flowAnalysis = flowToReporterSchedule(minReportersOutput, inputModel)
+    printFlowAnalysis(flowAnalysis, inputModel)
+    print("______________________________________________________________")
+
+# Function to find the maximum events coverable in a given model and output appropriately
+
+
+def maxEventsProblem(inputModel):
+    print("______________________________________________________________")
+    print("Q) Max events coverable within a given set of constraints")
+    maxEventsOutput = maxEventsCoverable(inputModel)
+    flowAnalysis = flowToReporterSchedule(maxEventsOutput, inputModel)
+    printFlowAnalysis(flowAnalysis, inputModel)
+    print("______________________________________________________________")
