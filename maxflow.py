@@ -145,10 +145,13 @@ def graphDifference(graph1, graph2):
 # Function to find the maximum flow from s to t in a given graph
 
 
-def edmondsKarps(startingGraph, startNode, endNode):
+def edmondsKarps(startingGraph, startNode, endNode,conversionToResidualGraphNeeded=True):
     flow = 0
     # Copy the starting graph to create a residual graph
-    residualGraph = convertToResidualGraph(startingGraph)
+    if conversionToResidualGraphNeeded:
+        residualGraph = convertToResidualGraph(startingGraph)
+    else:
+        residualGraph = startingGraph
     # While we can find augmenting path using a BFS
     augmentingPath = findAugmentingPath(residualGraph, startNode, endNode)
     while not augmentingPath == None:
